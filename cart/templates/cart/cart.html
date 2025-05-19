@@ -1,0 +1,126 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+    <!-- Title  -->
+    {% block title %} Cart | POCHONDO {% endblock title %}
+        <!-- ****** Top Discount Area End ****** -->
+        {% block content %}
+        <!-- ****** Cart Area Start ****** -->
+        <div class="cart_area section_padding_100 clearfix">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="cart-table clearfix">
+                            <table class="table table-responsive">
+                                <thead>
+                                    {%if not cart %}
+                                        <h3>You have no product in cart</h3>
+                                        {%else%}
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Size</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>                                   
+                                    {% for item in carts %}
+                                    <tr class="cart-item">                                        
+                                        <td class="cart_product_img d-flex align-items-center" >
+                                            <a href="{% url 'details' item.product.id %}"><img src="{{item.product.image.url}}" alt="Product"></a>
+                                            <h6>{{item.product.name}}</h6>
+                                        </td>
+                                        <td class="size"><span>{{item.size}}</span></td>
+                                        <td class="price"><span>${{item.product.price}}</span></td>
+                                        <td class="qty">
+                                            <div class="quantity">
+                                                <span  class="qty-minus" data-product="{{item.product.id}}" data-counter="{{forloop.counter}}"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                                <input type="number" class="qty-text" id="qty{{forloop.counter}}" step="1" min="0" max="12" name="quantity" value="{{item.quantity}}">
+                                                <span class="qty-plus"data-product="{{item.product.id}}" data-counter="{{forloop.counter}}"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                            </div>
+                                        </td>
+                                        <td class="total_price"><span>${{item.total}}</span></td>
+                                    </tr>                                    
+                                    {%endfor%}
+                                    {%endif%}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="cart-footer d-flex mt-30">
+                            <div class="back-to-shop w-50">
+                                <a href="{% url 'products:shop'%}">Continue shooping</a>
+                            </div>
+                            <div class="update-checkout w-50 text-right">
+                                <a href="{% url 'remove_full_cart' %}">clear cart</a>                                
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            <form action="{% url 'payments:checkout' %}" method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="coupon-code-area mt-70">
+                            <div class="cart-page-heading">
+                                <h5>Cupon code</h5>
+                                <p>Enter your cupone code</p>
+                            </div>                            
+                                <input type="search" name="search" placeholder="#569ab15">
+                                <button type="submit">Apply</button>                            
+                            </div>
+                    </div>
+                    
+                    <div class="col-12 col-md-6 col-lg-4">                        
+                        <div class="shipping-method-area mt-70">
+                            <div class="cart-page-heading">
+                                <h5>Shipping method</h5>
+                                <p>Select the one you want</p>
+                            </div>
+                            {%if cart|length == 0 %}
+                            {%for item in delivery%}
+                            <div  class="custom-control custom-radio mb-30" ">
+                                <input disabled type="radio" id="customRadio{{forloop.counter}}" name="customRadio" class="custom-control-input" value="{{item.id}}" required disabled>
+                                <label class="custom-control-label d-flex align-items-center justify-content-between"  for="customRadio{{forloop.counter}}"><span>{{item.delivery_type_name}}</span><span>${{item.delivery_price}}</span></label>
+                            </div>
+                            {%endfor%}
+                            {%else%}
+                            {%for item in delivery%}
+                            <div class="custom-control custom-radio mb-30" data-price="{{item.delivery_price}}">
+                                <input type="radio" id="customRadio{{forloop.counter}}" name="customRadio" class="custom-control-input" value="{{item.id}}" required>
+                                <label class="custom-control-label d-flex align-items-center justify-content-between"  for="customRadio{{forloop.counter}}"><span>{{item.delivery_type_name}}</span><span>${{item.delivery_price}}</span></label>
+                            </div>
+                            {%endfor%}
+                            {%endif%}
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <div class="cart-total-area mt-70">
+                            <div class="cart-page-heading">
+                                <h5>Cart total</h5>
+                                <p>Final info</p>
+                            </div>
+
+                            <ul class="cart-total-chart" data-total="{{cart_total.total__sum}}">
+                                <li><span>Subtotal</span> <span>${{cart_total.total__sum|floatformat:2}}</span></li>
+                                <li><span>Shipping</span> <span id="delivery-price">Free</span></li>
+                                <li><span><strong>Total</strong></span> <span><strong id="total-cart">${{cart_total.total__sum|floatformat:2}}</strong></span></li>
+                            </ul>
+                            
+                            {%if cart|length == 0 %}
+                            <button type="submit" disabled class="btn karl-checkout-btn">Proceed to checkout<a href="{% url 'payments:checkout' %}" ></a></button>
+                            {%else%}
+                            <button type="submit" class="btn karl-checkout-btn">Proceed to checkout<a href="{% url 'payments:checkout' %}" ></a></button>
+                            {%endif%}
+                        </div>
+                    </div>
+                </div>      
+            </div>
+            </form>
+        </div>
+        <!-- ****** Cart Area End ****** -->
+        <script type="text/javascript" src="{% static 'updateCart.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% load static %}
+
+    <!-- Title  -->
+    {% block title %}Karl | Checkout {% endblock title %}
+        <!-- ****** Top Discount Area End ****** -->
+        {% block content %}
+
+        <!-- ****** Header Area End ****** -->
+
+        <!-- ****** Checkout Area Start ****** -->
+        <div class="checkout_area section_padding_100">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-12 col-md-6">
+                        <div class="checkout_details_area mt-50 clearfix">
+
+                            <div class="cart-page-heading">
+                                <h5>Billing Address</h5>
+                                <p>Enter your cupone code</p>
+                            </div>
+
+                            <form action="{% url 'confirmed' %}" method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                                 
+                                    <div class="col-md-6 mb-3">
+                                        <label for="first_name">First Name <span>*</span></label>
+                                        {{form.first_name}}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="last_name">Last Name <span>*</span></label>
+                                        {{form.last_name}}
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <label for="company">Company Name</label>
+                                        {{form.company_name}}
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <label for="country">Country <span>*</span></label>
+                                        {{form.country}} 
+                                        
+                                    </select>
+                                    </div>                                   
+                                    <div class="col-12 mb-3">
+                                        <label for="street_address">Address <span>*</span></label>
+                                        {{form.address}} 
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <label for="postcode">Postcode <span>*</span></label>
+                                        {{form.postcode}} 
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <label for="city">Town/City <span>*</span></label>
+                                        {{form.city}} 
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <label for="state">Province <span>*</span></label>
+                                        {{form.province}} 
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <label for="phone_number">Phone No <span>*</span></label>
+                                        {{form.phone_no}} 
+                                    </div>
+                                    <div class="col-12 mb-4">
+                                        <label for="email_address">Email Address <span>*</span></label>
+                                        {{form.email}} 
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="custom-control custom-checkbox d-block mb-2">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                            <label class="custom-control-label" for="customCheck1">Terms and conitions</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox d-block mb-2">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck2">
+                                            <label class="custom-control-label" for="customCheck2">Create an accout</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox d-block">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck3">
+                                            <label class="custom-control-label" for="customCheck3">Subscribe to our newsletter</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-5 ml-lg-auto">
+                        <div class="order-details-confirmation">
+
+                            <div class="cart-page-heading">
+                                <h5>Your Order</h5>
+                                <p>The Details</p>
+                            </div>
+
+                            <ul class="order-details-form mb-4">
+                                <li><span>Product</span> <span>Total</span></li>
+                                {% for item in cart %}
+                                <li><span>{{item.product.name}}</span> <span>${{item.total|floatformat:2 }}</span></li>
+                                {%endfor%}
+                                <li><span>Subtotal</span> <span>${{cart_total.total__sum|floatformat:2 }}</span></li>
+                                <li><span>Shipping</span> <span>{{delivery_type.delivery_price|floatformat:2 }}</span></li>
+                                <li><span>Total</span> <span>${{total|floatformat:2 }}</span></li>
+                            </ul>
+
+
+                            <div >
+                                <div class="card">
+                                <h6 class="mb-0">Select Payment Type</h6>
+                                </div><br>
+                                <div class="form-check card-header">
+                                    <input class="form-check-input" type="radio" name="paymentRadio" id="paymentRadio1" value="1" required>
+                                    <label class="form-check-label" for="paymentRadio1">
+                                        Cash on Delievery                                      
+                                    </label>
+                                </div>                  
+                                
+                                <div class="form-check card-header">
+                                    <input class="form-check-input" type="radio" name="paymentRadio" id="paymentRadio2" value="2" required>
+                                    <label class="form-check-label" for="paymentRadio2">
+                                        SSLCOMMERZ
+                                    </label>
+                                </div>                          
+                                <input type="text" name="deliveryid"  value="{{delivery_type.id}}" hidden>
+                            </div>
+
+                            <button type="submit" class="btn karl-checkout-btn">Place Order</button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- ****** Checkout Area End ****** -->
+        {{session}}
+       {%endblock%}

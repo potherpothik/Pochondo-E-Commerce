@@ -1,0 +1,161 @@
+  <!-- ****** Quick View Modal Area Start ****** -->        
+  
+  <div class="modal fade" id="quickview-{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="quickview" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <button type="button" class="close btn" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+              <div class="modal-body">
+                  <div class="quickview_body">
+                      <div class="container">
+                          <div class="row">
+                              <div class="col-12 col-lg-5">
+                                  <div class="quickview_pro_img">
+                                      <img src="{{product.image.url}}" alt="">
+                                  </div>
+                          </div>
+
+                              <div class="col-12 col-lg-7">
+                                  <div class="quickview_pro_des">
+                                      <h4 class="title">{{product.name}}</h4>
+                                      <div class="top_seller_product_rating mb-15">
+                                          <i class="fa fa-star" aria-hidden="true"></i>
+                                          <i class="fa fa-star" aria-hidden="true"></i>
+                                          <i class="fa fa-star" aria-hidden="true"></i>
+                                          <i class="fa fa-star" aria-hidden="true"></i>
+                                          <i class="fa fa-star" aria-hidden="true"></i>
+                                      </div>
+                                      <h5 class="price">${{product.price}} {% if product.discount%}<span>$130</span>{%endif%}</h5>
+                                      <p>{{product.information}}</p>
+                                      <a href="{% url 'details' product.id %}">View Full Product Details</a>
+                                  </div>
+                      <div class="modal-size">                               
+                          <div class="widget size mb-50">
+                              <h6 class="widget-title">Size</h6>
+                              <div class="widget-desc" id="item-size{{forloop.counter}}">
+                                  <ul>
+                                      {% for item in product_size %}
+                                      {% if product.id == item.product.id %}                                            
+                                      <li><a href="#">{{item.size}}</a></li>
+                                      {%endif%}
+                                      {%endfor%}                                            
+                                  </ul>
+                              </div>
+                          </div>
+                           
+
+                          <script>
+                              document.querySelector('#item-size{{forloop.counter}}').querySelectorAll('li').forEach(function(item){                                    
+                              item.onclick = ()=>{        
+                                      var psize = item.innerText; 
+                                      console.log(psize);
+                                      document.querySelector('.product_size').innerText = psize;
+                                                  
+                                  };
+                              });
+                          </script>  
+
+                          </div>
+                                  <!-- Add to Cart Form -->
+                                  <form class="cart" method="post" onsubmit="return false">
+                                      <div class="quantity">
+                                          <span class="qty-minus" onclick="var effect = document.getElementById('qty2{{forloop.counter}}'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
+
+                                          <input type="number" class="qty-text{{forloop.counter}}" id="qty2{{forloop.counter}}" step="1" min="1" max="12" name="quantity" value="1">
+
+                                          <span class="qty-plus" onclick="var effect = document.getElementById('qty2{{forloop.counter}}'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                      </div>
+                                      {% if product.id in cart_items %}                                
+                                      <button type="submit" name="removecart" value="5" class="btn btn-danger d-block" onclick="location.href='{% url 'remove_cart' product.id %}';">Remove from Cart</button>
+                                      {% else %}
+                                      <button type="submit" id="modal-cart{{forloop.counter}}" name="addtocart" value="5" class="btn cart-submit d-block" >Add to cart</button>
+                                      <button style="display: none !important;" id="modal-cart2{{forloop.counter}}" type="submit" name="addtocart" value="5" class=" btn-danger d-block" onclick="location.href='{% url 'remove_cart' product.id %}';">Remove from Cart</button>
+                                      <p hidden id="p-id{{forloop.counter}}">{{product.id}}</p>
+                                      
+                              <script>                                                                
+                              var item = document.querySelector('#modal-cart{{forloop.counter}}');
+                                  item.onclick = ()=>{               
+                                  
+                                  
+                                  var effect = document.querySelector('.qty-text{{forloop.counter}}');
+                                  var quantity= effect.value; 
+                                  var session = document.querySelector('.session_id').innerText;
+                                  var productId = document.querySelector('#p-id{{forloop.counter}}').innerText;
+                                  var size = document.querySelector('.product_size').innerText;
+                                  console.log(quantity);       
+                                  console.log(productId);
+                                  console.log(size);
+                                 
+
+                                  if (size === ''){
+                                  alert('Please select size first')
+                                  }else{            
+
+                                      var data = {session: session, productId: productId, quantity: quantity, size: size};
+
+
+                                      var url = 'http://127.0.0.1:8000/add/cart';
+
+                                      fetch(url, {
+                                          method: 'POST',
+                                          headers:{
+                                          'Content-Type': 'application/json',
+                                          'X-CSRFToken': csrftoken, //Necessary to work with request.is_ajax()          
+                                          },
+
+                                          body: JSON.stringify(data)
+                                      })
+                                      .then((response)=>{       
+                                          if(response.status === 200 ){
+                                          var dis = document.querySelector('#modal-cart{{forloop.counter}}');
+                                          dis.style.setProperty("display", "none", "important");
+                                          document.querySelector('#modal-cart2{{forloop.counter}}').style.setProperty("display", "block", "important");
+
+                                          effect = document.querySelector('.cart_quantity');
+                                          cartItem = effect.innerText;        
+                                          effect.innerText++;     
+
+                                          }
+                                          return response.json()
+                                      })
+                                      .then(data => {        
+                                          console.log('Success:', data);        
+                                          console.log(Object.values(data));
+                                          console.log(data);           
+                                      });
+                                  }
+                              }
+                              </script>
+                                      {%endif%}
+                                      
+                                      
+                                      <!-- Wishlist -->
+                                      <div class="modal_pro_wishlist">
+                                          <a href="wishlist.html" target="_blank"><i class="ti-heart"></i></a>
+                                      </div>
+                                      <!-- Compare -->
+                                      <div class="modal_pro_compare">
+                                          <a href="compare.html" target="_blank"><i class="ti-stats-up"></i></a>
+                                      </div>
+                                  </form>
+
+                                  <div class="share_wf mt-30">
+                                      <p>Share With Friend</p>
+                                      <div class="_icon">
+                                          <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                                          <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                                          <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                                          <a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+     
+  <!-- ****** Quick View Modal Area End ****** -->  

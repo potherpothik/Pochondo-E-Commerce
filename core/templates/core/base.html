@@ -1,0 +1,324 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}POCHONDO | A premium brand{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/styling.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light py-3">
+            <div class="container">
+                <!-- Brand -->
+                <a class="navbar-brand" href="{% url 'core:index' %}">POCHONDO</a>
+                
+                <!-- Toggler for mobile -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <!-- Navigation items -->
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <!-- Search form -->
+                    <form class="d-flex ms-auto me-3 search-form">
+                        <div class="input-group">
+                            <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- User account and cart links -->
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'cart:cart_detail' %}">
+                                <i class="fas fa-shopping-cart"></i> Shopping Cart
+                                <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'wishlist:wishlist_detail' %}">
+                                <i class="fas fa-heart"></i> My Wish List
+                            </a>
+                        </li>
+                        {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user"></i> Account
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+                                <li><a class="dropdown-item" href="{% url 'users:dashboard' %}">Dashboard</a></li>
+                                <li><a class="dropdown-item" href="{% url 'users:profile' %}">My Profile</a></li>
+                                <li><a class="dropdown-item" href="{% url 'orders:place_order' %}">Orders</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form action="{% url 'users:logout' %}" method="POST" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item">Logout</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'users:login' %}">Sign In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'users:register' %}">Create an Account</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Main Navigation Bar -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <div class="collapse navbar-collapse" id="mainNavContent">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'products:eid_collection' %}">EID UL ADHA 2025</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'products:new_arrivals' %}">NEW IN</a>
+                        </li>
+                        
+                        <!-- Men Category Dropdown -->
+                        <li class="nav-item dropdown position-static">
+                            <a class="nav-link dropdown-toggle" href="{% url 'products:men' %}" id="menDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                MEN
+                            </a>
+                            <div class="dropdown-menu mega-dropdown-menu w-100" aria-labelledby="menDropdown">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-lg-4 category-section">
+                                            <h6>WESTERN WEAR</h6>
+                                            <ul>
+                                                <li><a href="{% url 'products:men_casual_shirts' %}">Casual Shirts</a></li>
+                                                <li><a href="{% url 'products:men_formal_shirts' %}">Formal Shirts</a></li>
+                                                <li><a href="{% url 'products:men_polo_shirts' %}">Polo Shirts</a></li>
+                                                <li><a href="{% url 'products:men_t_shirts' %}">T-Shirts</a></li>
+                                                <li><a href="{% url 'products:men_chinos' %}">Chinos And Fashion Trousers</a></li>
+                                                <li><a href="{% url 'products:men_formal_pants' %}">Formal Pants</a></li>
+                                                <li><a href="{% url 'products:men_jeans' %}">Jeans</a></li>
+                                                <li><a href="{% url 'products:men_shorts' %}">Shorts</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-4 category-section">
+                                            <h6>ETHNIC WEAR</h6>
+                                            <ul>
+                                                <li><a href="{% url 'products:men_panjabi' %}">Panjabi</a></li>
+                                                <li><a href="{% url 'products:men_kabli' %}">Kabli And Matching Suits</a></li>
+                                                <li><a href="{% url 'products:men_fatua' %}">Fatua</a></li>
+                                                <li><a href="{% url 'products:men_waistcoats' %}">Waistcoats</a></li>
+                                                <li><a href="{% url 'products:men_pajamas' %}">Pajamas</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <!-- Women Category Dropdown -->
+                        <li class="nav-item dropdown position-static">
+                            <a class="nav-link dropdown-toggle" href="{% url 'products:women' %}" id="womenDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                WOMEN
+                            </a>
+                            <div class="dropdown-menu mega-dropdown-menu w-100" aria-labelledby="womenDropdown">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-lg-4 category-section">
+                                            <h6>WESTERN WEAR</h6>
+                                            <ul>
+                                                <li><a href="{% url 'products:women_tops' %}">Fashion Tops And Casual Shirts</a></li>
+                                                <li><a href="{% url 'products:women_dresses' %}">Long Dresses</a></li>
+                                                <li><a href="{% url 'products:women_mystika' %}">Mystika Collection</a></li>
+                                                <li><a href="{% url 'products:women_bling' %}">Bling Collection</a></li>
+                                                <li><a href="{% url 'products:women_t_shirts' %}">T-Shirts</a></li>
+                                                <li><a href="{% url 'products:women_jeans' %}">Jeans</a></li>
+                                                <li><a href="{% url 'products:women_pants' %}">Pants</a></li>
+                                                <li><a href="{% url 'products:women_tanks' %}">Tank Tops</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-4 category-section">
+                                            <h6>ETHNIC WEAR</h6>
+                                            <ul>
+                                                <li><a href="{% url 'products:women_ethnic_kurtis' %}">Ethnic Kurtis And Kurtas</a></li>
+                                                <li><a href="{% url 'products:women_ethnic_sets' %}">Ethnic Sets</a></li>
+                                                <li><a href="{% url 'products:women_lawn_kurtis' %}">Lawn Kurtis And Kurtas</a></li>
+                                                <li><a href="{% url 'products:women_two_piece' %}">Two-Piece Lawns</a></li>
+                                                <li><a href="{% url 'products:women_three_piece' %}">Three-Piece Lawns</a></li>
+                                                <li><a href="{% url 'products:women_ethnic_pants' %}">Ethnic Pants</a></li>
+                                                <li><a href="{% url 'products:women_sarees' %}">Sarees</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-4 category-section">
+                                            <h6>ACCESSORIES</h6>
+                                            <ul>
+                                                <li><a href="{% url 'products:women_totes' %}">Tote Bags</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <!-- Kids Category Dropdown -->
+                        <li class="nav-item dropdown position-static">
+                            <a class="nav-link dropdown-toggle" href="{% url 'products:kids' %}" id="kidsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                KIDS
+                            </a>
+                            <div class="dropdown-menu mega-dropdown-menu w-100" aria-labelledby="kidsDropdown">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-lg-3 category-section">
+                                            <h6>BOYS</h6>
+                                            <ul>
+                                                <li><a href="{% url 'products:boys_panjabi' %}">Boys Panjabi</a></li>
+                                                <li><a href="{% url 'products:boys_kabli' %}">Boys Kabli</a></li>
+                                                <li><a href="{% url 'products:boys_shirts' %}">Boys Casual Shirts</a></li>
+                                                <li><a href="{% url 'products:boys_polos' %}">Boys Polos</a></li>
+                                                <li><a href="{% url 'products:boys_tshirts' %}">Boys T - Shirts</a></li>
+                                                <li><a href="{% url 'products:boys_bottoms' %}">Boys Bottoms</a></li>
+                                                <li><a href="{% url 'products:boys_shorts' %}">Boys Shorts</a></li>
+                                                <li><a href="{% url 'products:boys_prince' %}">Prince</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-3 category-section">
+                                            <h6>GIRLS</h6>
+                                            <ul>
+                                                <li><a href="{% url 'products:girls_ethnic_tops' %}">Girls Ethnic Tops</a></li>
+                                                <li><a href="{% url 'products:girls_lawn' %}">Girl's Lawn</a></li>
+                                                <li><a href="{% url 'products:girls_tops' %}">Girl's Tops</a></li>
+                                                <li><a href="{% url 'products:girls_bottom' %}">Girl's Bottom</a></li>
+                                                <li><a href="{% url 'products:girls_dresses' %}">Girls' Dresses</a></li>
+                                                <li><a href="{% url 'products:girls_princess' %}">Princess</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-3 category-section">
+                                            <h6>JUNIOR BOYS</h6>
+                                            <ul>
+                                                <li><a href="{% url 'products:junior_boys_panjabi' %}">Junior Boy's Panjabi</a></li>
+                                                <li><a href="{% url 'products:junior_boys_kabli' %}">Junior Boys Kabli</a></li>
+                                                <li><a href="{% url 'products:junior_boys_top' %}">Junior Boys Top</a></li>
+                                                <li><a href="{% url 'products:junior_boys_bottom' %}">Junior Boys Bottom</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-3 category-section">
+                                            <h6>JUNIOR GIRLS</h6>
+                                            <ul>
+                                                <li><a href="{% url 'products:junior_girls_ethnic' %}">Junior Girls Ethnic</a></li>
+                                                <li><a href="{% url 'products:junior_girls_lawn' %}">Junior Girls Lawn</a></li>
+                                                <li><a href="{% url 'products:junior_girls_top' %}">Junior Girls Top</a></li>
+                                                <li><a href="{% url 'products:junior_girls_bottom' %}">Junior Girls Bottom</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Newsletter Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center">
+                    <h3>Subscribe for<br> POCHONDO newsletters!</h3>
+                    <div class="newsletter-form mt-4">
+                        <form class="d-flex">
+                            <input type="email" class="form-control" placeholder="Your e-mail address" required>
+                            <button type="submit" class="btn btn-dark ms-2">Subscribe</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <!-- Information Section -->
+                <div class="col-lg-3 mb-4">
+                    <h5>INFORMATION</h5>
+                    <ul>
+                        <li><a href="{% url 'core:about' %}">About POCHONDO</a></li>
+                        <li><a href="{% url 'core:store_locator' %}">Store Locator</a></li>
+                        <li><a href="{% url 'core:contact' %}">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Policies Section -->
+                <div class="col-lg-3 mb-4">
+                    <h5>POLICIES</h5>
+                    <ul>
+                        <li><a href="{% url 'core:delivery_policy' %}">Delivery Policy</a></li>
+                        <li><a href="{% url 'core:exchange_policy' %}">Exchange Policy</a></li>
+                        <li><a href="{% url 'core:privacy_policy' %}">Privacy Policy</a></li>
+                        <li><a href="{% url 'core:safety_advisory' %}">Safety Advisory</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Customer Service Section -->
+                <div class="col-lg-3 mb-4">
+                    <h5>CUSTOMER SERVICE</h5>
+                    <ul>
+                        <li><a href="tel:01779-879799">+880 1779-879 799</a></li>
+                        <li>MONDAY-SATURDAY (11:00 AM-10:00 PM)</li>
+                        <li><a href="mailto:info@pochondomart.com">info@pochondomart.com</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Social Media Section -->
+                <div class="col-lg-3 mb-4">
+                    <h5>FOLLOW US</h5>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/pochondoshopping/"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Copyright Section -->
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="copyright">
+                        <p>&copy; 2024 POCHONDO | All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
