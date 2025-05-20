@@ -7,11 +7,13 @@ from django.shortcuts import render, redirect
 from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.utils.crypto import get_random_string
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
-import random
+# import random
+from .models import CustomUser
 
 def register(request):
     if request.method == 'POST':
@@ -105,17 +107,50 @@ def delete_account(request):
     return render(request, 'users/delete_account.html')
 
 # Helper functions for email sending
+# def send_verification_email(request, user):
+#     """Send verification email to user"""
+#     verification_url = f"{request.scheme}://{request.get_host()}/users/verify/{user.id}/"
+#     context = {
+#         'user': user,
+#         'verification_url': verification_url
+#     }
+#     email_html = render_to_string('users/verification_email.html', context)
+#     send_mail(
+#         'Verify Your Email Address',
+#         'Please verify your email address',
+#         settings.DEFAULT_FROM_EMAIL,
+#         [user.email],
+#         html_message=email_html,
+#         fail_silently=False,
+#     )
+
 def send_verification_email(request, user):
-    """Send verification email to user"""
-    verification_url = f"{request.scheme}://{request.get_host()}/users/verify/{user.id}/"
+    """Send verification email with token-based link"""
+    # Generate unique verification token
+    verification_token = get_random_string(50)
+    
+    # Store token and timestamp in user model
+    user.email_verification_token = verification_token
+    user.token_created_at = timezone.now()
+    user.save()
+
+    # Build verification URL with token
+    verification_url = f"{request.scheme}://{request.get_host()}/users/verify/{verification_token}/"
+    
+    # Email context
     context = {
         'user': user,
-        'verification_url': verification_url
+        'verification_url': verification_url,
+        'support_email': settings.SUPPORT_EMAIL,
+        'privacy_policy_url': f"{request.scheme}://{request.get_host()}/privacy-policy/",
+        'expiration_hours': 24  # Token valid for 24 hours
     }
+
+    # Render and send email
     email_html = render_to_string('users/verification_email.html', context)
     send_mail(
-        'Verify Your Email Address',
-        'Please verify your email address',
+        'Verify Your Email Address - POCHONDO',
+        strip_tags(email_html),  # Plain text version
         settings.DEFAULT_FROM_EMAIL,
         [user.email],
         html_message=email_html,
@@ -167,20 +202,21 @@ def password_reset_done(request):
 def dashboard(request):
     return render(request, 'users/dashboard.html')
 
-def verify_email(request, user_id):
-    try:
-        user = CustomUser.objects.get(id=user_id)
-        if not user.is_verified:
-            user.is_verified = True
-            user.is_active = True
-            user.save()
-            messages.success(request, 'Your email has been verified. You can now login.')
-        else:
-            messages.info(request, 'Your email is already verified.')
-    except CustomUser.DoesNotExist:
-        messages.error(request, 'Invalid verification link.')
+# def verify_email(request, verification_token):
+#     try:
+#         user = CustomUser.objects.get(email_verification_token=verification_token)
+#         if not user.is_verified:
+#             user.is_verified = True
+#             user.is_active = True
+#             user.email_verification_token = None  # Clear the token after verification
+#             user.save()
+#             messages.success(request, 'Your email has been verified. You can now login.')
+#         else:
+#             messages.info(request, 'Your email is already verified.')
+#     except CustomUser.DoesNotExist:
+#         messages.error(request, 'Invalid verification link.')
     
-    return redirect('users:login')
+#     return redirect('users:login')
 
 def send_verification_email(request, user):
     """Send verification email to user"""
@@ -201,3 +237,27 @@ def send_verification_email(request, user):
         )
     except Exception as e:
         logger.error(f"Failed to send verification email: {str(e)}")
+
+
+def verify_email(request, verification_token):
+    try:
+        user = CustomUser.objects.get(email_verification_token=verification_token)
+        
+        # Check token expiration (24 hours)
+        if (timezone.now() - user.token_created_at).total_seconds() > 86400:  # 24*60*60
+            messages.error(request, 'Verification link has expired.')
+            return redirect('users:resend_verification')
+            
+        if not user.is_verified:
+            user.is_verified = True
+            user.is_active = True
+            user.email_verification_token = None  # Clear used token
+            user.save()
+            messages.success(request, 'Email verified successfully! You can now login.')
+        else:
+            messages.info(request, 'Email is already verified.')
+            
+    except CustomUser.DoesNotExist:
+        messages.error(request, 'Invalid verification link.')
+    
+    return redirect('users:login')

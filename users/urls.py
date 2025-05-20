@@ -11,13 +11,8 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('profile/', views.profile_view, name='profile'),
     path('edit-profile/', views.edit_profile, name='edit_profile'),
-    path('verify/<int:user_id>/', views.verify_email, name='verify_email'),
-    # path('verify/<uidb64>/<token>/', views.verify_email, name='verify-email'), 
-    # path('otp-verification/', views.otp_verification, name='otp_verification'),
-    # path('resend-verification/', views.resend_verification, name='resend_verification'),
+    path('verify/<str:verification_token>/', views.verify_email, name='verify_email'),
     path('privacy-settings/', views.privacy_settings, name='privacy_settings'),
-    path('terms-conditions/', views.terms_conditions, name='terms_conditions'),
-    path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
     path('delete-account/', views.delete_account, name='delete_account'),
     
     # Password reset URLs
@@ -37,7 +32,5 @@ urlpatterns = [
     path('password-change/done/', 
          auth_views.PasswordChangeDoneView.as_view(template_name='users/password_change_done.html'),
          name='password_change_done'),
-    path('verify/<int:user_id>/', views.verify_email, name='verify_email'),
-
     path('dashboard/', views.dashboard, name='dashboard'),    
 ]

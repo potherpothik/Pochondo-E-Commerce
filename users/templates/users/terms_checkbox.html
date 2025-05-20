@@ -1,0 +1,6 @@
+<div class="form-check mb-4">
+    <input type="checkbox" name="{{ field.name }}" class="form-check-input" id="{{ field.id_for_label }}" required>
+    <label class="form-check-label" for="{{ field.id_for_label }}">
+        I agree to the <a href="{% url 'core:terms_conditions' %}" class="text-decoration-none">Terms and Conditions</a>
+    </label>
+</div>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification - POCHONDO</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eeeeee;
+            margin-bottom: 30px;
+        }
+        .logo {
+            max-width: 180px;
+            margin-bottom: 20px;
+        }
+        .content {
+            color: #444444;
+            font-size: 16px;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #2563eb;
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 25px 0;
+            font-weight: 600;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #eeeeee;
+            text-align: center;
+            font-size: 14px;
+            color: #666666;
+        }
+        .text-muted {
+            color: #999999;
+        }
+        .verification-code {
+            font-size: 24px;
+            letter-spacing: 3px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://pochondo.com/static/images/logo.png" alt="POCHONDO Logo" class="logo">
+            <h1 style="color: #1a1a1a; margin: 0;">Email Verification Required</h1>
+        </div>
+
+        <div class="content">
+            <p>Hi {{ user.first_name }},</p>
+            <p>Thank you for creating an account with POCHONDO! To complete your registration, please verify your email address by clicking the button below:</p>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="{{ verification_url }}" class="button">Verify Email Address</a>
+            </div>
+
+            <p>If the button doesn't work, copy and paste this link into your browser:</p>
+            <div class="verification-code">{{ verification_url }}</div>
+
+            <p style="color: #666; margin-top: 20px;">
+                <em>This verification link will expire in {{ expiration_hours }} hours.</em>
+            </p>
+            
+            <p>If you didn't create this account, you can safely ignore this email.</p>
+        </div>
+
+        <div class="footer">
+            <p class="text-muted">Need help? Contact our support team at <a href="mailto:{{ support_email }}" style="color: #2563eb; text-decoration: none;">{{ support_email }}</a></p>
+            <p class="text-muted">© {% now "Y" %} POCHONDO. All rights reserved.</p>
+            <p class="text-muted" style="font-size: 12px;">
+                This email was sent to {{ user.email }}<br>
+                <a href="{{ unsubscribe_url }}" style="color: #666666; text-decoration: none;">Unsubscribe</a> |
+                <a href="{{ privacy_policy_url }}" style="color: #666666; text-decoration: none;">Privacy Policy</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,5 +1,5 @@
 {% extends 'core/base.html' %}
-{% load static %}
+{% load static crispy_forms_tags %}
 
 {% block title %}Register | POCHONDO{% endblock %}
 
@@ -22,10 +22,6 @@
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
-    .form-floating > label {
-        padding-left: 1rem;
-    }
-
     .password-toggle {
         position: absolute;
         right: 15px;
@@ -41,20 +37,9 @@
         transition: all 0.3s ease;
     }
 
-    .password-strength-weak {
-        background-color: #dc3545;
-        width: 25%;
-    }
-
-    .password-strength-medium {
-        background-color: #ffc107;
-        width: 50%;
-    }
-
-    .password-strength-strong {
-        background-color: #28a745;
-        width: 100%;
-    }
+    .password-strength-weak { background-color: #dc3545; width: 25%; }
+    .password-strength-medium { background-color: #ffc107; width: 50%; }
+    .password-strength-strong { background-color: #28a745; width: 100%; }
 
     .password-requirements {
         font-size: 14px;
@@ -73,62 +58,9 @@
         font-size: 12px;
     }
 
-    .requirement-met {
-        color: #28a745;
-    }
+    .requirement-met { color: #28a745; }
 
-    .social-login {
-        display: flex;
-        justify-content: center;
-        margin: 1.5rem 0;
-    }
-
-    .social-login-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.5rem 1.5rem;
-        margin: 0 0.5rem;
-        border-radius: 5px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        border: 1px solid #ddd;
-        background-color: #fff;
-    }
-
-    .social-login-btn:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .social-login-btn img {
-        height: 24px;
-        margin-right: 0.5rem;
-    }
-
-    .divider {
-        display: flex;
-        align-items: center;
-        text-align: center;
-        margin: 1.5rem 0;
-    }
-
-    .divider::before,
-    .divider::after {
-        content: '';
-        flex: 1;
-        border-bottom: 1px solid #dee2e6;
-    }
-
-    .divider-text {
-        padding: 0 1rem;
-        color: #6c757d;
-        font-size: 14px;
-    }
-
-    .auth-footer {
-        text-align: center;
-        margin-top: 1.5rem;
-    }
+    .auth-footer { text-align: center; margin-top: 1.5rem; }
 </style>
 {% endblock %}
 
@@ -152,117 +84,17 @@
             </div>
             {% endif %}
 
-            <div class="row">
-                <!-- First Name -->
-                <div class="col-md-6 mb-3">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="firstName" name="first_name" placeholder="First Name" required>
-                        <label for="firstName">First Name</label>
-                    </div>
-                </div>
-
-                <!-- Last Name (optional) -->
-                <div class="col-md-6 mb-3">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="lastName" name="last_name" placeholder="Last Name (optional)">
-                        <label for="lastName">Last Name (optional)</label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Email -->
-            <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
-                <label for="email">Email</label>
-            </div>
-
-            <!-- Phone Number -->
-            <div class="form-floating mb-3">
-                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone Number" required>
-                <label for="phone">Phone Number</label>
-            </div>
-
-            <!-- Address -->
-            <div class="form-floating mb-3">
-                <textarea class="form-control" id="address" name="address" placeholder="Address" style="height: 100px" required></textarea>
-                <label for="address">Address</label>
-            </div>
-
-            <!-- Password field with toggle and strength indicator -->
-            <div class="form-floating mb-2 position-relative">
-                <input type="password" class="form-control" id="password" name="password1" placeholder="Password" required>
-                <label for="password">Password</label>
-                <span class="password-toggle" onclick="togglePasswordVisibility()">
-                    <i class="fas fa-eye" id="togglePassword"></i>
-                </span>
-            </div>
+            {% crispy form %}
 
             <!-- Password strength indicator -->
             <div class="password-strength" id="passwordStrength"></div>
 
             <!-- Password requirements -->
             <div class="password-requirements mt-2 mb-3">
-                <div class="requirement-item">
-                    <span class="requirement-icon" id="lengthIcon"><i class="fas fa-circle"></i></span>
-                    <span>At least 8 characters</span>
-                </div>
-                <div class="requirement-item">
-                    <span class="requirement-icon" id="uppercaseIcon"><i class="fas fa-circle"></i></span>
-                    <span>At least one uppercase letter</span>
-                </div>
-                <div class="requirement-item">
-                    <span class="requirement-icon" id="lowercaseIcon"><i class="fas fa-circle"></i></span>
-                    <span>At least one lowercase letter</span>
-                </div>
-                <div class="requirement-item">
-                    <span class="requirement-icon" id="numberIcon"><i class="fas fa-circle"></i></span>
-                    <span>At least one number</span>
-                </div>
-                <div class="requirement-item">
-                    <span class="requirement-icon" id="specialIcon"><i class="fas fa-circle"></i></span>
-                    <span>At least one special character</span>
-                </div>
+                <!-- Keep your existing password requirements list -->
             </div>
-
-            <!-- Confirm Password -->
-            <div class="form-floating mb-4 position-relative">
-                <input type="password" class="form-control" id="confirmPassword" name="password2" placeholder="Confirm Password" required>
-                <label for="confirmPassword">Confirm Password</label>
-                <span class="password-toggle" onclick="toggleConfirmPasswordVisibility()">
-                    <i class="fas fa-eye" id="toggleConfirmPassword"></i>
-                </span>
-            </div>
-
-            <!-- Terms and Conditions -->
-            <div class="form-check mb-4">
-                <input class="form-check-input" type="checkbox" id="agreeTerms" name="agree_terms" required>
-                <label class="form-check-label" for="agreeTerms">
-                    I agree to the <a href="{% url 'users:terms_conditions' %}" class="text-decoration-none">Terms and Conditions</a> and <a href="{% url 'users:privacy_policy' %}" class="text-decoration-none">Privacy Policy</a>
-                </label>
-            </div>
-
-            <!-- Register button -->
-            <button type="submit" class="btn btn-dark w-100 py-2" id="registerBtn" disabled>Create Account</button>
         </form>
 
-        <!-- Divider -->
-        {% comment %} <div class="divider">
-            <span class="divider-text">OR REGISTER WITH</span>
-        </div>
-
-        <!-- Social login buttons -->
-        <div class="social-login">
-            <button class="social-login-btn" onclick="registerWithGoogle()">
-                <img src="{% static 'images/google-icon.png' %}" alt="Google">
-                Google
-            </button>
-            <button class="social-login-btn" onclick="registerWithFacebook()">
-                <img src="{% static 'images/facebook-icon.png' %}" alt="Facebook">
-                Facebook
-            </button>
-        </div> {% endcomment %}
-
-        <!-- Login link -->
         <div class="auth-footer">
             <p>Already have an account? <a href="{% url 'users:login' %}" class="text-decoration-none fw-bold">Sign in</a></p>
         </div>
@@ -272,203 +104,94 @@
 
 {% block extra_js %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const passwordInput = document.getElementById('password');
-        const confirmPasswordInput = document.getElementById('confirmPassword');
-        const agreeTermsCheckbox = document.getElementById('agreeTerms');
-        const registerBtn = document.getElementById('registerBtn');
-        
-        // Add these password validation criteria
-        const passwordRequirements = {
-            length: false,
-            uppercase: false,
-            lowercase: false,
-            number: false,
-            special: false
-        };
-    
-        function validatePassword(password) {
-            const requirements = {
-                length: password.length >= 8,
-                uppercase: /[A-Z]/.test(password),
-                lowercase: /[a-z]/.test(password),
-                number: /\d/.test(password),
-                special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
-            };
-            return requirements;
-        }
-    
-        function updatePasswordStrength() {
-            const password = passwordInput.value;
-            const requirements = validatePassword(password);
-            
-            // Update UI indicators
-            Object.keys(requirements).forEach(key => {
-                const icon = document.getElementById(`${key}Icon`);
-                if (icon) {
-                    icon.style.color = requirements[key] ? 'green' : 'red';
-                }
-            });
-            
-            // Update requirements status
-            Object.assign(passwordRequirements, requirements);
-        }
-    
-        function checkFormValidity() {
-            let allValid = true;
-            
-            // Check required fields (including non-password fields)
-            const requiredFields = document.querySelectorAll('[required]');
-            requiredFields.forEach(field => {
-                if (!field.value.trim() && field.id !== 'confirmPassword') {
-                    allValid = false;
-                }
-            });
-    
-            // Check password match
-            const password = passwordInput.value;
-            const confirmPassword = confirmPasswordInput.value;
-            if (password !== confirmPassword || password === '') {
-                allValid = false;
-            }
-            
-            // Check password strength requirements
-            const requirements = validatePassword(password);
-            if (!Object.values(requirements).every(v => v)) {
-                allValid = false;
-            }
-            
-            // Check terms agreement
-            if (!agreeTermsCheckbox.checked) {
-                allValid = false;
-            }
-            
-            registerBtn.disabled = !allValid;
-        }
-    
-        // Update event listeners to include all relevant fields
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('input', () => {
-                if (input === passwordInput) {
-                    updatePasswordStrength();
-                }
-                checkFormValidity();
-            });
-        });
-    
-        // Initialize check after all event listeners are set
-        setTimeout(() => {
-            updatePasswordStrength();
-            checkFormValidity();
-        }, 100);
-    });
-
-    // Password visibility toggle
-    function togglePasswordVisibility() {
-        const passwordInput = document.getElementById('password');
-        const toggleIcon = document.getElementById('togglePassword');
-        
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            toggleIcon.classList.remove('fa-eye');
-            toggleIcon.classList.add('fa-eye-slash');
-        } else {
-            passwordInput.type = 'password';
-            toggleIcon.classList.remove('fa-eye-slash');
-            toggleIcon.classList.add('fa-eye');
-        }
-    }
-    
-    function toggleConfirmPasswordVisibility() {
-        const confirmPasswordInput = document.getElementById('confirmPassword');
-        const toggleIcon = document.getElementById('toggleConfirmPassword');
-        
-        if (confirmPasswordInput.type === 'password') {
-            confirmPasswordInput.type = 'text';
-            toggleIcon.classList.remove('fa-eye');
-            toggleIcon.classList.add('fa-eye-slash');
-        } else {
-            confirmPasswordInput.type = 'password';
-            toggleIcon.classList.remove('fa-eye-slash');
-            toggleIcon.classList.add('fa-eye');
-        }
-    }
-    
-    // Password strength checker
-    const passwordInput = document.getElementById('password');
+document.addEventListener('DOMContentLoaded', function() {
+    const passwordInput = document.getElementById('id_password1');
+    const confirmPasswordInput = document.getElementById('id_password2');
+    const agreeTermsCheckbox = document.getElementById('agreeTerms');
+    const registerBtn = document.querySelector('#registrationForm [type="submit"]');
     const passwordStrength = document.getElementById('passwordStrength');
-    const lengthIcon = document.getElementById('lengthIcon');
-    const uppercaseIcon = document.getElementById('uppercaseIcon');
-    const lowercaseIcon = document.getElementById('lowercaseIcon');
-    const numberIcon = document.getElementById('numberIcon');
-    const specialIcon = document.getElementById('specialIcon');
     
-    passwordInput.addEventListener('input', function() {
+    // Password requirement icons
+    const requirementIcons = {
+        length: document.getElementById('lengthIcon'),
+        uppercase: document.getElementById('uppercaseIcon'),
+        lowercase: document.getElementById('lowercaseIcon'),
+        number: document.getElementById('numberIcon'),
+        special: document.getElementById('specialIcon')
+    };
+
+    function validatePassword(password) {
+        return {
+            length: password.length >= 8,
+            uppercase: /[A-Z]/.test(password),
+            lowercase: /[a-z]/.test(password),
+            number: /\d/.test(password),
+            special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+        };
+    }
+
+    function updatePasswordStrength() {
         const password = passwordInput.value;
-        let strength = 0;
+        const requirements = validatePassword(password);
+
+        // Update requirement icons
+        Object.entries(requirements).forEach(([key, met]) => {
+            requirementIcons[key].innerHTML = met ? 
+                '<i class="fas fa-check-circle requirement-met"></i>' :
+                '<i class="fas fa-circle"></i>';
+        });
+
+        // Update strength bar
+        const strength = Object.values(requirements).filter(v => v).length;
+        passwordStrength.className = 'password-strength ';
         
-        // Check length
-        if (password.length >= 8) {
-            strength += 1;
-            lengthIcon.innerHTML = '<i class="fas fa-check-circle requirement-met"></i>';
-        } else {
-            lengthIcon.innerHTML = '<i class="fas fa-circle"></i>';
-        }
-        
-        // Check uppercase letters
-        if (/[A-Z]/.test(password)) {
-            strength += 1;
-            uppercaseIcon.innerHTML = '<i class="fas fa-check-circle requirement-met"></i>';
-        } else {
-            uppercaseIcon.innerHTML = '<i class="fas fa-circle"></i>';
-        }
-        
-        // Check lowercase letters
-        if (/[a-z]/.test(password)) {
-            strength += 1;
-            lowercaseIcon.innerHTML = '<i class="fas fa-check-circle requirement-met"></i>';
-        } else {
-            lowercaseIcon.innerHTML = '<i class="fas fa-circle"></i>';
-        }
-        
-        // Check numbers
-        if (/[0-9]/.test(password)) {
-            strength += 1;
-            numberIcon.innerHTML = '<i class="fas fa-check-circle requirement-met"></i>';
-        } else {
-            numberIcon.innerHTML = '<i class="fas fa-circle"></i>';
-        }
-        
-        // Check special characters
-        if (/[^A-Za-z0-9]/.test(password)) {
-            strength += 1;
-            specialIcon.innerHTML = '<i class="fas fa-check-circle requirement-met"></i>';
-        } else {
-            specialIcon.innerHTML = '<i class="fas fa-circle"></i>';
-        }
-        
-        // Update strength indicator
-        passwordStrength.className = 'password-strength';
-        
-        if (password.length === 0) {
-            passwordStrength.classList.add('');
-        } else if (strength < 3) {
+        if (strength < 2) {
             passwordStrength.classList.add('password-strength-weak');
-        } else if (strength < 5) {
+        } else if (strength < 4) {
             passwordStrength.classList.add('password-strength-medium');
         } else {
             passwordStrength.classList.add('password-strength-strong');
         }
-    });
-
-    {% comment %} function registerWithGoogle() {
-        // Redirect to Google OAuth flow for registration
-        window.location.href = "{% url 'social:begin' 'google-oauth2' %}?next={% url 'users:register_complete' %}";
     }
 
-    function registerWithFacebook() {
-        // Redirect to Facebook OAuth flow for registration
-        window.location.href = "{% url 'social:begin' 'facebook' %}?next={% url 'users:register_complete' %}";
-    } {% endcomment %}
+    function checkFormValidity() {
+        const passwordValid = Object.values(validatePassword(passwordInput.value)).every(v => v);
+        const passwordsMatch = passwordInput.value === confirmPasswordInput.value;
+        const termsAgreed = agreeTermsCheckbox.checked;
+
+        confirmPasswordInput.setCustomValidity(passwordsMatch ? '' : 'Passwords must match');
+        registerBtn.disabled = !(passwordValid && passwordsMatch && termsAgreed);
+    }
+
+    // Event listeners
+    passwordInput.addEventListener('input', () => {
+        updatePasswordStrength();
+        checkFormValidity();
+    });
+
+    confirmPasswordInput.addEventListener('input', checkFormValidity);
+    agreeTermsCheckbox.addEventListener('change', checkFormValidity);
+
+    // Password visibility toggle
+    function createToggle(passwordField, toggleIcon) {
+        return function() {
+            const type = passwordField.type === 'password' ? 'text' : 'password';
+            passwordField.type = type;
+            toggleIcon.classList.toggle('fa-eye-slash');
+        };
+    }
+
+    // Add toggle buttons to password fields
+    [passwordInput, confirmPasswordInput].forEach((field) => {
+        const toggle = document.createElement('span');
+        toggle.className = 'password-toggle';
+        toggle.innerHTML = '<i class="fas fa-eye"></i>';
+        toggle.onclick = createToggle(field, toggle.querySelector('i'));
+        field.parentNode.insertBefore(toggle, field.nextSibling);
+    });
+
+    // Initial check
+    checkFormValidity();
+});
 </script>
 {% endblock %}

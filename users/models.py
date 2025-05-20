@@ -6,7 +6,7 @@ from .managers import CustomUserManager
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30, blank=True)
     phone = models.CharField(max_length=20)
     address = models.TextField()
     is_verified = models.BooleanField(default=False)
@@ -17,6 +17,8 @@ class CustomUser(AbstractUser):
     country = models.CharField(blank=True, max_length=20)
     mobile = models.CharField(null=True, blank=True, max_length=15)
     profile_picture = models.ImageField(null=True, blank=True, upload_to="user_profile")
+    email_verification_token = models.CharField(max_length=100, blank=True, null=True)
+    token_created_at = models.DateTimeField(null=True, blank=True)
     
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
