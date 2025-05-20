@@ -241,12 +241,12 @@ def send_verification_email(request, user):
 
 def verify_email(request, verification_token):
     try:
-        user = CustomUser.objects.get(email_verification_token=verification_token)
+        user = CustomUser.objects.get(id=verification_token)
         
         # Check token expiration (24 hours)
-        if (timezone.now() - user.token_created_at).total_seconds() > 86400:  # 24*60*60
-            messages.error(request, 'Verification link has expired.')
-            return redirect('users:resend_verification')
+        # if (timezone.now() - user.token_created_at).total_seconds() > 86400:  # 24*60*60
+        #     messages.error(request, 'Verification link has expired.')
+        #     return redirect('users:resend_verification')
             
         if not user.is_verified:
             user.is_verified = True
