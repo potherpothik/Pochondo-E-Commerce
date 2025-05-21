@@ -20,5 +20,4 @@ urlpatterns = [
     # path('accounts/facebook/login/', FacebookOAuth2View.as_view(), name='facebook_login'),
     # path('accounts/google/login/', OAuth2View.adapter_view(GoogleOAuth2Adapter), name='google_login'),
     # path('accounts/facebook/login/', OAuth2View.adapter_view(FacebookOAuth2Adapter), name='facebook_login'),
-    path('products/', include('products.urls', namespace='products')),
 ]

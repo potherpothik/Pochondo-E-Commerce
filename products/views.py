@@ -10,6 +10,10 @@ from .models import Product, Category, Brand, ProductVariant, Tag
 from reviews.models import Review
 from wishlist.models import Wishlist
 
+def products_views(request):
+    products = Product.objects.all()
+    return render(request, 'products/product_list.html', {'products': products})
+
 def product_list(request):
     products = Product.objects.filter(is_active=True)
     
