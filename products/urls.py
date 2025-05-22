@@ -5,11 +5,10 @@ app_name = 'products'
 
 urlpatterns = [
     path('', views.products_views, name='home'),
-
-
-    
+ 
     path('shop/', views.product_list, name='product_list'),
     path('search/', views.search_products, name='search_products'),
+    
     path('category/<slug:slug>/', views.category_detail, name='category_detail'),
     path('get-variant-details/', views.get_variant_details, name='get_variant_details'),
     path('product/<slug:slug>/', views.product_detail, name='product_detail'),
