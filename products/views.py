@@ -5,14 +5,20 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.contrib import messages
-
+from django.db.models import Count
 from .models import Product, Category, Brand, ProductVariant, Tag
 from reviews.models import Review
 from wishlist.models import Wishlist
 
 def products_views(request):
-    products = Product.objects.all()
-    return render(request, 'products/product_list.html', {'products': products})
+    products = Product.objects.filter(is_active=True).prefetch_related('images')
+    categories = Category.objects.filter(is_active=True).annotate(product_count=Count('products'))
+    
+    context = {
+        'products': products,
+        'categories': categories
+    }
+    return render(request, 'products/home.html', context)
 
 def product_list(request):
     products = Product.objects.filter(is_active=True)

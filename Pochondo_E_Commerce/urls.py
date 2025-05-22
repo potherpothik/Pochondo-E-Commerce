@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.urls import include, path
+from django.conf import settings
+from django.conf.urls.static import static
 # from social_django.views import GoogleOAuth2View, FacebookOAuth2View
 # from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 # from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
@@ -7,11 +9,11 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('core.urls', namespace='core')),
+    path('core/', include('core.urls', namespace='core')),
     path('cart/', include('cart.urls', namespace='cart')),
     path('wishlist/', include('wishlist.urls', namespace='wishlist')),
     path('users/', include('users.urls', namespace='users')),
-    path('products/', include('products.urls', namespace='products')),
+    path('', include('products.urls', namespace='products')),
     path('users/', include('users.urls', namespace='users')),
     path('orders/', include('orders.urls', namespace='orders')),
     # path('accounts/', include('allauth.urls')),
@@ -21,3 +23,6 @@ urlpatterns = [
     # path('accounts/google/login/', OAuth2View.adapter_view(GoogleOAuth2Adapter), name='google_login'),
     # path('accounts/facebook/login/', OAuth2View.adapter_view(FacebookOAuth2Adapter), name='facebook_login'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
